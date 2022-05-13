@@ -1,5 +1,7 @@
 ﻿using Alura.ByteBank.Dados.Repositorio;
 using Alura.ByteBank.Dominio.Entidades;
+using Alura.ByteBank.Dominio.Interfaces.Repositorios;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +13,24 @@ namespace Infraestrutura.Testes
 {
     public class ClienteRepositorioTestes
     {
+        private readonly IClienteRepositorio _clienteRepositorio;
+
+        public ClienteRepositorioTestes()
+        {
+            var servico = new ServiceCollection();
+            servico.AddTransient<IClienteRepositorio, ClienteRepositorio>();
+
+            // vai estanciar um objeto que implementa a interface
+            var provedor = servico.BuildServiceProvider();
+            _clienteRepositorio = provedor.GetService<IClienteRepositorio>();
+        }
+
         [Fact]
         public void TestaObterTodosClientes()
         {
-            //var a2 = Guid.NewGuid();
-            //var a3 = Guid.NewGuid();
-            //var a4 = Guid.NewGuid();
-            //var a5 = Guid.NewGuid();
-            //var a6 = Guid.NewGuid();
-            //var a7 = Guid.NewGuid();
-
             //arrange
-            var _respositorio = new ClienteRepositorio();
-
             //act
-            List<Cliente> lista = _respositorio.ObterTodos();
+            List<Cliente> lista = _clienteRepositorio.ObterTodos();
 
             //assert
             Assert.NotNull(lista);
