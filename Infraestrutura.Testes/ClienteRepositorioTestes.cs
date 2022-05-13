@@ -36,5 +36,31 @@ namespace Infraestrutura.Testes
             Assert.NotNull(lista);
             Assert.Equal(2, lista.Count);
         }
+
+        [Fact]
+        public void TestaObterClientePorId()
+        {
+            //arrange
+            //act
+            var cliente = _clienteRepositorio.ObterPorId(5);
+
+            //assert
+            Assert.NotNull(cliente);
+        }
+
+        [Theory]
+        [InlineData(5)]
+        [InlineData(6)]
+        public void TestaObterClientesPorVariosId(int id)
+        {
+            //arrange
+            //act
+            var cliente = _clienteRepositorio.ObterPorId(id);
+
+            //assert
+            Assert.NotNull(cliente);
+        }
+
+
     }
 }
