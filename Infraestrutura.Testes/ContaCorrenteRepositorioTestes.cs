@@ -1,7 +1,10 @@
 ﻿using Alura.ByteBank.Dados.Repositorio;
 using Alura.ByteBank.Dominio.Entidades;
 using Alura.ByteBank.Dominio.Interfaces.Repositorios;
+using Infraestrutura.Testes.Servicos;
+using Infraestrutura.Testes.Servicos.DTO;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,6 +97,25 @@ namespace Infraestrutura.Testes
 
             //assert
             Assert.True(retorno);
+        }
+
+        [Fact]
+        public void TesteConsultaPixMock()
+        {
+            //arrange
+            var guid = new Guid("a0b80d53-c0dd-4897-ab90-c0615ad80d5a");
+            var pix = new PixDTO { Chave = guid, Saldo = 10 };
+
+            var pixRepositorioMock = new Mock<IPixRepositorio>();
+            pixRepositorioMock.Setup(x => x.consultaPix(It.IsAny<Guid>())).Returns(pix);
+
+            var mock = pixRepositorioMock.Object;
+
+            //act 
+            var saldo = mock.consultaPix(guid).Saldo;
+
+            //assert
+            Assert.Equal(10, saldo);
         }
     }
 }

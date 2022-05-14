@@ -1,7 +1,9 @@
 ﻿using Alura.ByteBank.Dados.Repositorio;
 using Alura.ByteBank.Dominio.Entidades;
 using Alura.ByteBank.Dominio.Interfaces.Repositorios;
+using Infraestrutura.Testes.Servicos;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,5 +108,20 @@ namespace Infraestrutura.Testes
         //        () => _agenciaRepositorio.ObterPorId(30)
         //    );
         //}
+
+        [Fact]
+        public void TestaObterAgenciasMock()
+        {
+            //arrange
+            var bytebankRepositorioMock = new Mock<IByteBankRepositorio>();
+            var mock = bytebankRepositorioMock.Object;
+
+            //act
+            var lista = mock.BuscarAgencias();
+
+            //assert
+            //verifica se o comporta foi invocado no objeto
+            bytebankRepositorioMock.Verify(b => b.BuscarAgencias());
+        }
     }
 }
