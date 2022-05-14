@@ -48,6 +48,52 @@ namespace Infraestrutura.Testes
             Assert.NotNull(agencia);
         }
 
+        [Fact]
+        public void TestaAtualizaSaldoDeterminadaConta()
+        {
+            //arrange
+            var conta = _contaCorrenteRepositorio.ObterPorId(4);
+            double novoSaldo = 15;
+            conta.Saldo = novoSaldo;
 
+            //act 
+            var atualizado = _contaCorrenteRepositorio.Atualizar(4, conta);
+
+            //assert
+            Assert.True(atualizado);
+        }
+
+        [Fact]
+        public void TestaInsereUmaNovaContaCorrenteNoBancoDeDados()
+        {
+            //arrange
+            var conta = new ContaCorrente
+            {
+                Saldo = 10,
+                Identificador = Guid.NewGuid(),
+                Cliente = new Cliente
+                {
+                    Nome = "Kent Nelso",
+                    CPF = "486.074.980-45",
+                    Identificador = Guid.NewGuid(),
+                    Profissao = "Bancário",
+                    Id = 5
+                },
+                Agencia = new Agencia
+                {
+                    Nome = "Agencia Central",
+                    Identificador = Guid.NewGuid(),
+                    Id = 9,
+                    Endereco = "Rua das flores, 25",
+                    Numero = 147
+                }
+            };
+
+            //act
+            var retorno = _contaCorrenteRepositorio.Adicionar(conta);
+
+            //assert
+            Assert.True(retorno);
+        }
     }
 }

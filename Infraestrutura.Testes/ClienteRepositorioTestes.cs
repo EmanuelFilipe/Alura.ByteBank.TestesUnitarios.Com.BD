@@ -61,6 +61,51 @@ namespace Infraestrutura.Testes
             Assert.NotNull(cliente);
         }
 
+        [Fact]
+        public void TestaInserirNovoClienteNoBD()
+        {
+            //arrange
+            var identificador = Guid.NewGuid();
 
+            var cliente = new Cliente
+            {
+                Nome = "Filipe Silva",
+                CPF = "075.534.746-30",
+                Profissao = "Developer",
+                Identificador = identificador,
+            };
+
+            //act
+            var retorno = _clienteRepositorio.Adicionar(cliente);
+
+            //assert
+            Assert.True(retorno);
+        }
+
+        [Fact]
+        public void TesteAtualizarDeterminadaInformacaoDoCliente()
+        {
+            //arrange
+            var cliente = _clienteRepositorio.ObterPorId(7);
+            string novaProfissao = "Analista De Sistemas Sênior";
+            cliente.Profissao = novaProfissao;
+
+            //act
+            var atualizado = _clienteRepositorio.Atualizar(7, cliente);
+
+            //assert
+            Assert.True(atualizado);
+        }
+
+        [Fact]
+        public void TestaRemoverInformacaoDeterminadaAgencia()
+        {
+            //arrange
+            //act
+            var atualizado = _clienteRepositorio.Excluir(7);
+
+            //assert
+            Assert.True(atualizado);
+        }
     }
 }

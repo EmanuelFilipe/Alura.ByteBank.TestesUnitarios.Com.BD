@@ -47,5 +47,64 @@ namespace Infraestrutura.Testes
             var agencia = _agenciaRepositorio.ObterPorId(id);
             Assert.NotNull(agencia);
         }
+
+        [Fact]
+        public void TestaInsereUmaNovaAgenciaNoBD()
+        {
+            //arrange
+            string nome = "Agencia Guarapari";
+            int numero = 125982;
+            Guid identificador = Guid.NewGuid();
+            string endereco = "Rua: 7 de setembro - centro";
+
+            var agencia = new Agencia
+            {
+                Nome = nome,
+                Identificador = identificador,
+                Endereco = endereco,
+                Numero = numero
+            };
+
+            //act 
+            var retorno = _agenciaRepositorio.Adicionar(agencia);
+
+            //assert
+            Assert.True(retorno);
+        }
+
+        [Fact]
+        public void TestaAtualizacaoInformacaoDeterminadaAgencia()
+        {
+            //arrange
+            var agencia = _agenciaRepositorio.ObterPorId(9);
+            var novoNome = "Agencia Nova";
+            agencia.Nome = novoNome;
+
+            //act
+            var atualizado = _agenciaRepositorio.Atualizar(9, agencia);
+
+            //assert
+            Assert.True(atualizado);
+        }
+
+        [Fact]
+        public void TestaRemoverInformacaoDeterminadaAgencia()
+        {
+            //arrange
+            //act
+            var atualizado = _agenciaRepositorio.Excluir(11);
+
+            //assert
+            Assert.True(atualizado);
+        }
+
+        ////exceções
+        //[Fact]
+        //public void TestaExcecaoConsultaAgenciaPorId()
+        //{
+        //    Assert.Throws<FormatException>(
+        //        () => _agenciaRepositorio.ObterPorId(30)
+        //    );
+        //}
     }
 }
