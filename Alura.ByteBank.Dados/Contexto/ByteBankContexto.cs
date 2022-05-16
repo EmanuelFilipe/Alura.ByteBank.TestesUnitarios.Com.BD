@@ -9,12 +9,12 @@ namespace Alura.ByteBank.Dados.Contexto
         public DbSet<ContaCorrente> ContaCorrentes { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Agencia> Agencias { get; set; }
-       
+        public DbSet<UsuarioApp> Usuarios { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string stringconexao = "server=localhost;DataBase=bytebankBD;Uid=root;Pwd=789551";
             optionsBuilder.UseMySql(stringconexao, ServerVersion.AutoDetect(stringconexao));
-            //optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=bytebankbd;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -52,7 +52,16 @@ namespace Alura.ByteBank.Dados.Contexto
                 entity.HasOne(d => d.Cliente).WithMany(p => p.Contas);
                 entity.HasOne(d => d.Agencia).WithMany(p => p.Contas);
             });
-            
+
+            modelBuilder.Entity<UsuarioApp>(entity =>
+            {
+                entity.ToTable("usuario");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.UserName).IsRequired();
+                entity.Property(e => e.Email).IsRequired();
+                entity.Property(e => e.Senha).IsRequired();                
+            });
+
             base.OnModelCreating(modelBuilder);
         }
 

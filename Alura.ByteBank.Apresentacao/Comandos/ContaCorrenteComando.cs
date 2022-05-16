@@ -16,12 +16,14 @@ namespace Alura.ByteBank.Apresentacao.Comandos
     {
         IContaCorrenteRepositorio _repositorio;
         IContaCorrenteServico _servico;
+        IClienteServico _cliente;
+        IAgenciaServico _agencia;
         ContaCorrenteServicoApp contaCorrenteServicoApp;
         public ContaCorrenteComando()
         {
             _repositorio = new ContaCorrenteRepositorio();
             _servico = new ContaCorrenteServico(_repositorio);
-            contaCorrenteServicoApp = new ContaCorrenteServicoApp(_servico);
+            contaCorrenteServicoApp = new ContaCorrenteServicoApp(_servico, _agencia, _cliente);
         }
 
         public bool Adicionar(ContaCorrenteDTO conta)
@@ -30,7 +32,7 @@ namespace Alura.ByteBank.Apresentacao.Comandos
         }
         public bool Atualizar(int id, ContaCorrenteDTO conta)
         {
-            return contaCorrenteServicoApp.Atualizar(id,conta);
+            return contaCorrenteServicoApp.Atualizar(id, conta);
         }
 
         public bool Excluir(int id)
@@ -45,7 +47,7 @@ namespace Alura.ByteBank.Apresentacao.Comandos
 
         public List<ContaCorrenteDTO> ObterTodos()
         {
-           return contaCorrenteServicoApp.ObterTodos();
+            return contaCorrenteServicoApp.ObterTodos();
         }
 
     }

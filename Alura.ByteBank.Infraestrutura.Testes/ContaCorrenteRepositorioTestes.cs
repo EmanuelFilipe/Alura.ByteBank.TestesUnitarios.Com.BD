@@ -1,22 +1,38 @@
 ﻿using Alura.ByteBank.Dados.Repositorio;
 using Alura.ByteBank.Dominio.Entidades;
+using Alura.ByteBank.Dominio.Interfaces.Repositorios;
+using Alura.ByteBank.Infraestrutura.Testes.DTO;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Collections.Generic;
-using Xunit; 
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Alura.ByteBank.Infraestrutura.Testes
 {
     public class ContaCorrenteRepositorioTestes
     {
-        private ContaCorrenteRepositorio _repositorio;
+        public ITestOutputHelper SaidaConsoleTeste;
+        private readonly IContaCorrenteRepositorio _repositorio;
 
+        public ContaCorrenteRepositorioTestes(ITestOutputHelper _saidaConsoleTeste)
+        {
+            SaidaConsoleTeste = _saidaConsoleTeste;
+            SaidaConsoleTeste.WriteLine("Construtor invocado.");
+
+            //Injetando dependências no construtor;
+            var servico = new ServiceCollection();
+            servico.AddTransient<IContaCorrenteRepositorio, ContaCorrenteRepositorio>();
+
+            var provedor = servico.BuildServiceProvider();
+            _repositorio = provedor.GetService<IContaCorrenteRepositorio>();
+
+        }
         [Fact]
         public void TestaObterTodasContasCorrentes()
         {
             //Arrange
-            _repositorio = new ContaCorrenteRepositorio();
-
             //Act
             List<ContaCorrente> lista = _repositorio.ObterTodos();
 
@@ -28,8 +44,6 @@ namespace Alura.ByteBank.Infraestrutura.Testes
         public void TestaObterContaCorrentePorId()
         {
             //Arrange
-            _repositorio = new ContaCorrenteRepositorio();
-
             //Act
             var conta = _repositorio.ObterPorId(1);
 
@@ -40,12 +54,9 @@ namespace Alura.ByteBank.Infraestrutura.Testes
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        [InlineData(3)]
         public void TestaObterContasCorrentesPorVariosId(int id)
         {
             //Arrange
-            _repositorio = new ContaCorrenteRepositorio();
-
             //Act
             var conta = _repositorio.ObterPorId(id);
 
@@ -53,20 +64,55 @@ namespace Alura.ByteBank.Infraestrutura.Testes
             Assert.NotNull(conta);
         }
 
+
         [Fact]
         public void TestaAtualizaSaldoDeterminadaConta()
         {
             //Arrange
-            _repositorio = new ContaCorrenteRepositorio();
-            var conta = _repositorio.ObterPorId(2);
+
+            var conta = _repositorio.ObterPorId(1);
             double saldoNovo = 15;
             conta.Saldo = saldoNovo;
 
             //Act
-            var atualizado = _repositorio.Atualizar(2, conta);
+            var atualizado = _repositorio.Atualizar(1, conta);
 
             //Assert
             Assert.True(atualizado);
+        }
+
+        [Fact]
+        public void TestaInsereUmaNovaContaCorrenteNoBancoDeDados()
+        {
+            //Arrange           
+            var conta = new ContaCorrente()
+            {
+                Saldo = 10,
+                Identificador = Guid.NewGuid(),
+                Cliente = new Cliente()
+                {
+                    Nome = "Kent Nelson",
+                    CPF = "486.074.980-45",
+                    Identificador = Guid.NewGuid(),
+                    Profissao = "Bancário",
+                    Id = 1
+                },
+                Agencia = new Agencia()
+                {
+                    Nome = "Agencia Central Coast City",
+                    Identificador = Guid.NewGuid(),
+                    Id = 1,
+                    Endereco = "Rua das Flores,25",
+                    Numero = 147
+                }
+            };
+
+            //Act
+            var retorno = _repositorio.Adicionar(conta);
+
+            //Assert
+            Assert.True(retorno);
+
         }
 
         // Testes com Mock
@@ -85,7 +131,7 @@ namespace Alura.ByteBank.Infraestrutura.Testes
         }
 
         [Fact]
-        public void TestaConsultaPixMock()
+        public void TestaConsultaPixPorChaveMock()
         {
             //Arange
             var pixRepositorioMock = new Mock<IPixRepositorio>();
@@ -98,5 +144,29 @@ namespace Alura.ByteBank.Infraestrutura.Testes
             pixRepositorioMock.Verify(b => b.consultaPix(new Guid("a0b80d53-c0dd-4897-ab90-c0615ad80d5a")));
         }
 
+        [Fact]
+        public void TestaConsultaTodosPixStub()
+        {
+
+            //Arange
+            var guid = new Guid("a0b80d53-c0dd-4897-ab90-c0615ad80d5a");
+            var pix = new PixDTO() { Chave = guid, Saldo = 10 };
+
+            var pixRepositorioMock = new Mock<IPixRepositorio>();
+            pixRepositorioMock.Setup(x => x.consultaPix(It.IsAny<Guid>())).Returns(pix);
+
+            var mock = pixRepositorioMock.Object;
+
+            //Act
+            var saldo = mock.consultaPix(guid).Saldo;
+
+            //Assert
+            Assert.Equal(10, saldo);
+        }
+
+        public void Dispose()
+        {
+            SaidaConsoleTeste.WriteLine("Destrutor invocado.");
+        }
     }
 }

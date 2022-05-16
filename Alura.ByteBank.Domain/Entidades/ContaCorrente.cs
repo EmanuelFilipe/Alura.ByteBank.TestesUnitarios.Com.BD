@@ -16,8 +16,9 @@ namespace Alura.ByteBank.Dominio.Entidades
         public ContaCorrente()
         {
 
-        }       
+        }
         private Cliente _cliente;
+        
         public virtual Cliente Cliente {
             get
             {

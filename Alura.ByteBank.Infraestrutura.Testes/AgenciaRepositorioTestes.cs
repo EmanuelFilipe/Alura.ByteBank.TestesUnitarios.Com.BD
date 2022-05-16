@@ -1,5 +1,7 @@
 ﻿using Alura.ByteBank.Dados.Repositorio;
 using Alura.ByteBank.Dominio.Entidades;
+using Alura.ByteBank.Dominio.Interfaces.Repositorios;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -7,18 +9,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Alura.ByteBank.Infraestrutura.Testes
 {
     public class AgenciaRepositorioTestes
     {
-        private AgenciaRepositorio _repositorio;
+        private readonly IAgenciaRepositorio _repositorio;
+        public ITestOutputHelper SaidaConsoleTeste;
+
+        public AgenciaRepositorioTestes(ITestOutputHelper _saidaConsoleTeste)
+        {
+            
+            var servico = new ServiceCollection();
+            servico.AddTransient<IAgenciaRepositorio,AgenciaRepositorio>();
+            var provedor = servico.BuildServiceProvider();
+            _repositorio = provedor.GetService<IAgenciaRepositorio>();
+
+            SaidaConsoleTeste = _saidaConsoleTeste;
+            SaidaConsoleTeste.WriteLine("Construtor invocado.");
+            //Injetando dependências no construtor;
+        }
 
         [Fact]
-        public void TestaObterTodasAgencias()
+        public void TestaObterTodasAgenciasRepositorio()
         {
-            //Arrange
-            _repositorio = new AgenciaRepositorio();
+            //Arrange         
 
             //Act
             List<Agencia> lista = _repositorio.ObterTodos();
@@ -28,10 +44,9 @@ namespace Alura.ByteBank.Infraestrutura.Testes
         }
 
         [Fact]
-        public void TestaObterAgenciaPorId()
+        public void TestaObterAgenciaPorIdRepositorio()
         {
             //Arrange
-            _repositorio = new AgenciaRepositorio();
 
             //Act
             var agencia = _repositorio.ObterPorId(1);
@@ -44,11 +59,9 @@ namespace Alura.ByteBank.Infraestrutura.Testes
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
-        [InlineData(3)]
-        public void TestaObterAgenciasPorVariosId(int id)
+        public void TestaObterAgenciasPorVariosIdRepositorio(int id)
         {
-            //Arrange
-            _repositorio = new AgenciaRepositorio();
+            //Arrange       
 
             //Act
             var agencia = _repositorio.ObterPorId(id);
@@ -59,10 +72,32 @@ namespace Alura.ByteBank.Infraestrutura.Testes
         }
 
         [Fact]
-        public void TestaAtualizacaoInformacaoDeterminadaAgencia()
+        public void TesteInsereUmaNovaAgenciaNaBaseDeDadosRepositorio()
         {
-            //Arrange
-            _repositorio = new AgenciaRepositorio();
+            //Arrange            
+            string nome = "Agencia Guarapari";
+            int numero = 125982;
+            Guid identificador = Guid.NewGuid();
+            string endereco = "Rua: 7 de Setembro - Centro";
+
+            var agencia = new Agencia()
+            {
+                Nome = nome,
+                Identificador = identificador,
+                Endereco = endereco,
+                Numero = numero
+            };
+
+            //Act
+            var retorno = _repositorio.Adicionar(agencia);
+
+            //Assert
+            Assert.True(retorno);
+        }
+        [Fact]
+        public void TestaAtualizacaoInformacaoDeterminadaAgenciaRepositorio()
+        {
+            //Arrange      
             var agencia = _repositorio.ObterPorId(2);
             var nomeNovo = "Agencia Nova";
             agencia.Nome = nomeNovo;
@@ -72,6 +107,31 @@ namespace Alura.ByteBank.Infraestrutura.Testes
 
             //Assert
             Assert.True(atualizado);
+        }
+
+        [Fact]
+        public void TestaRemoverInformacaoDeterminadaAgencia()
+        {
+            //Arrange
+            //Act
+            var atualizado = _repositorio.Excluir(5);
+
+            //Assert
+            Assert.True(atualizado);
+        }
+
+
+        //Exceções
+        [Fact]
+        public void TestaExcecaoConsultaPorAgenciaPorId()
+        {
+
+            //Act     
+            //Assert
+            Assert.Throws<Exception>(
+                () => _repositorio.ObterPorId(33)
+             );
+
         }
 
 
@@ -110,6 +170,11 @@ namespace Alura.ByteBank.Infraestrutura.Testes
 
             //Assert
             Assert.True(adicionado);
+        }
+
+        public void Dispose()
+        {
+            SaidaConsoleTeste.WriteLine("Destrutor invocado.");
         }
     }
 }

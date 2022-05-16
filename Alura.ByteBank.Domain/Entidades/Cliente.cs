@@ -12,6 +12,9 @@ namespace Alura.ByteBank.Dominio.Entidades
         public int Id { get; set; }
         private string _cpf;
         public Guid Identificador { get; set; }
+
+        [Required]
+        [MinLength(11, ErrorMessage = "Campo deve ter no mínimo 11 caracteres.")]
         public string CPF
         {
             get
@@ -29,6 +32,9 @@ namespace Alura.ByteBank.Dominio.Entidades
             }
         }
         private string _nome;
+
+        [Required]
+        [MinLength(3, ErrorMessage = "Campo deve ter no mínimo 3 caracteres.")]
         public String Nome
         {
             get { return _nome; }

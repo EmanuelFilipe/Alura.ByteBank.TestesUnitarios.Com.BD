@@ -90,7 +90,7 @@ namespace Alura.ByteBank.Infraestrutura.Testes
                      Numero=147
                 }
             },
-             new ContaCorrente()
+            new ContaCorrente()
             {
                 Saldo = 10,
                 Id = 2,

@@ -100,6 +100,29 @@ namespace Alura.ByteBank.Dados.Migrations
                     b.ToTable("conta_corrente");
                 });
 
+            modelBuilder.Entity("Alura.ByteBank.Dominio.Entidades.UsuarioApp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("usuario");
+                });
+
             modelBuilder.Entity("Alura.ByteBank.Dominio.Entidades.ContaCorrente", b =>
                 {
                     b.HasOne("Alura.ByteBank.Dominio.Entidades.Agencia", "Agencia")

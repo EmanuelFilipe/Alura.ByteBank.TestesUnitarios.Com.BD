@@ -32,6 +32,9 @@ namespace Alura.ByteBank.Dominio.Entidades
             } 
         }
         private String _endereco;
+
+        [Required]
+        [MinLength(10,ErrorMessage ="Campo deve ter no mínimo 10 caracteres.")]
         public String Endereco
         {
             get { return _endereco; }
