@@ -10,15 +10,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Infraestrutura.Testes
 {
     public class AgenciaRepositorioTestes
     {
         private readonly IAgenciaRepositorio _agenciaRepositorio;
+        public ITestOutputHelper SaidaConsoleTeste { get; set; }
 
-        public AgenciaRepositorioTestes()
+        public AgenciaRepositorioTestes(ITestOutputHelper saidaConsoleTeste)
         {
+            SaidaConsoleTeste = saidaConsoleTeste;
+            SaidaConsoleTeste.WriteLine("construtor invocado.");
+
             var servico = new ServiceCollection();
             servico.AddTransient<IAgenciaRepositorio, AgenciaRepositorio>();
 
