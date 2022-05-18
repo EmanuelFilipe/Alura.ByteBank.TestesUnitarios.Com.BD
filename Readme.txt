@@ -1,8 +1,8 @@
 Para usar o webapp.testes precisa instalar os pacotes:
 - Selenium.WebDriver (4.1.0)
-- E para usar no crhome precisa instalar tbm: Selenium.WebDriver.ChromeDriver (na vers„o do seu browser)
+- E para usar no chrome precisa instalar tbm: Selenium.WebDriver.ChromeDriver (na vers√£o do seu browser)
 
-Para usar a ferramenta vocÍ deve primeiro rodar o projecto com o Ctrl+F5 e depois executar os testes.
+Para usar a ferramenta voc√™ deve primeiro rodar o projecto com o Ctrl+F5 e depois executar os testes.
 
 *************************************
 
@@ -11,7 +11,7 @@ DevOps
 Integrando o Github ao Azure
 
 - Logando no Azure.DevOps, crie um novo projeto
-- clique na opÁ„o "Project Settings"
+- clique na op√ß√£o "Project Settings"
 - Pipelines > Service Connections > create service connection > selecione o Github
 - OAuth Configuration > AzurePipelines > Authorize > Logue no Github > Save
 
@@ -32,9 +32,9 @@ Criando Pipelines
 
 - agent specification > windows-2022
 - Agent job 1 > Agent seleciont: azure pipelines > agent specification > windows-2022
-- desabilitar a task de Test por hora, com bot„o direito do mouse
+- desabilitar a task de Test por hora, com bot√£o direito do mouse
 - save e queue > save and run
 
 Editando pipeline
 - clique no menu > no job criado > editar
-  menu Triggers > Continuous integration > selecionar a opÁ„o Enable continuous integration
+  menu Triggers > Continuous integration > selecionar a op√ß√£o Enable continuous integration
